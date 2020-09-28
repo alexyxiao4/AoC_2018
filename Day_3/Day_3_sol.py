@@ -1,10 +1,9 @@
 import re
-from collections import Counter
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pprint import pprint
 
 
-def part1(coords):
+def part1_and_2(coords):
     seen = Counter()
     id_to_coords = defaultdict(list)
 
@@ -16,6 +15,7 @@ def part1(coords):
                 id_to_coords[id].append((true_x, true_y))
 
     repeat(seen)
+
     singletons = {coord for coord, count in seen.items() if count == 1}
 
     for claims in id_to_coords:
@@ -31,8 +31,7 @@ def repeat(counter):
     print(repeats)
 
 
-
 if __name__ == "__main__":
     with open("./Day_3_inputs.txt", "r") as f:
         coords = [line for line in f]
-    part1(coords)
+    part1_and_2(coords)
