@@ -2,50 +2,52 @@ from collections import Counter
 from collections import defaultdict
 
 
+# find occurences of 2x a letter and 3x a letter in list of strings
 def part1(string_arr):
     num_of_twos = 0
     num_of_threes = 0
     for line in string_arr:
         vals = Counter(line).values()
-        two_count = 0
-        three_count = 0
-        for value in vals:
-            if value == 2:
-                two_count += 1
-            if value == 3:
-                three_count += 1
-        if two_count != 0:
+        if 2 in vals:
             num_of_twos += 1
-        if three_count != 0:
+        if 3 in vals:
             num_of_threes += 1
         # if 2 in vals
     print(num_of_twos * num_of_threes)
 
 
+# find 2 strings that are different by exactly 1 letter
 def part2(string_arr):
+    # Key:(index, letter) => value: list of strings that correspond
     previous = defaultdict(list)
-    # dict of [index, letter] mapped to words
     length = len(string_arr[0]) - 1
-    solution = ""
-    # go through words in the param
+
     for word in string_arr:
-        similar = Counter()
-        # go through every letter in the word
+        shared = Counter()
         for idx, letter in enumerate(word, start=1):
-            # go to dict of tuples of (idx, letter) => list of words
-            value_of_key = previous[(idx, letter)]
-            if len(value_of_key) != 0:
-                for close_word in value_of_key:
-                    similar[close_word] += 1
-                    if similar[close_word] == length:
-                        found_word = close_word
-                        current_word = word
-                        i = 0
-                        while i < (length + 1):
-                            if found_word[i] == current_word[i]:
-                                solution += (found_word[i])
-                            i+=1
-            previous[(idx, letter)].append(word)
+            shared.update(previous[(idx, letter)])
+        almost_match = similar_word(shared, length)
+        if almost_match:
+            same_characters(word, almost_match, length)
+            return
+        previous[(idx, letter)].append(word)
+
+
+# return string if same chars except 1
+def similar_word(counter, length):
+    for key, value in counter.most_common(1):
+        if value == length:
+            return key
+
+
+# print a string with all common chars across 2 words
+def same_characters(word, close_word, length):
+    i = 0
+    solution = ""
+    while i < (length + 1):
+        if word[i] == close_word[i]:
+            solution += (word[i])
+        i += 1
     print(solution)
 
 

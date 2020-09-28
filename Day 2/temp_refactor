@@ -1,0 +1,27 @@
+def part2(string_arr):
+    previous = defaultdict(list)
+    length = len(string_arr[0]) - 1
+
+    for word in string_arr:
+        shared = Counter()
+        for idx, letter in enumerate(word, start=1):
+            shared.update(previous[(idx, letter)])
+            almost_match = similar_word(shared, length)
+            if almost_match is not None:
+                same_characters(word, almost_match, length)
+
+            previous[(idx, letter)].append(word)
+
+def similar_word(counter, length):
+    count_to_dict = dict(counter)
+    for key, value in count_to_dict.items():
+        if value == length:
+            return key
+
+def same_characters(word, close_word, length):
+    i = 0
+    solution = ""
+    while i < (length + 1):
+        if word[i] == close_word[i]:
+            solution += (word[i])
+    print(solution)
